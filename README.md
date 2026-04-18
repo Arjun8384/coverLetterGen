@@ -1,54 +1,83 @@
-# ◆ LetterForge — AI Cover Letter Generator (Level 3)
+Project live link: https://coverlettergen-8j66.onrender.com
+---
 
-> Mission 4 Submission · Python/Flask · Google Gemini AI · PDF Parsing · Secure .env
+```markdown
+# LetterForge — AI Cover Letter Generator
+
+A full-stack web application that generates personalized, professional cover letters using AI. Upload your resume, paste a job description, and get a tailored cover letter in seconds.
 
 ---
 
-## ✦ Features
+## Features
 
-| Feature | Detail |
-|---|---|
-| **AI Generation** | Google Gemini 1.5 Flash — 250–350 word, structured cover letters |
-| **PDF Parsing** | Upload your resume PDF → text extracted → fed to AI for personalization |
-| **Secure API Key** | `.env` file only, never committed to Git |
-| **Loading State** | Animated spinner during AI generation |
-| **Copy + Download** | One-click copy to clipboard, download as `.txt` |
-| **Drag & Drop** | Drag your PDF onto the upload zone |
-| **Fully Responsive** | Works on mobile, tablet, desktop |
+- **Resume Parsing** — Upload your PDF resume and the app extracts your experience to personalize the output
+- **AI-Powered Writing** — Connects to Groq's LLaMA 3.3 70B model to generate structured, professional letters
+- **Job Description Matching** — Paste the JD and the AI aligns your skills to what the employer is looking for
+- **Copy & Download** — One-click copy to clipboard or download as a `.txt` file
+- **Drag & Drop Upload** — Drop your PDF directly onto the upload zone
+- **Fully Responsive** — Works on mobile, tablet, and desktop
+- **Secure by Design** — API keys stored in `.env`, never exposed in source code
 
 ---
 
-## ◆ Project Structure
+## Tech Stack
+
+**Backend**
+- Python 3.11
+- Flask — web framework and API routing
+- Groq SDK — LLaMA 3.3 70B for letter generation
+- PyPDF2 — PDF text extraction
+- python-dotenv — environment variable management
+- Gunicorn — production WSGI server
+
+**Frontend**
+- Vanilla HTML, CSS, JavaScript — no framework dependency
+- Google Fonts (Playfair Display + DM Sans)
+- Fetch API for backend communication
+
+**Deployment**
+- Render (backend + static serving)
+- GitHub (version control + auto-deploy trigger)
+
+---
+
+## Project Structure
 
 ```
 ai-cover-letter/
 ├── backend/
-│   ├── app.py              ← Flask app (API routes)
-│   └── requirements.txt    ← Python dependencies
+│   ├── app.py               # Flask app — API routes and AI logic
+│   └── requirements.txt     # Python dependencies
 ├── frontend/
 │   ├── templates/
-│   │   └── index.html      ← Main HTML page
+│   │   └── index.html       # Main page
 │   └── static/
-│       ├── css/style.css   ← All styling
-│       └── js/main.js      ← Frontend logic
-├── .env.example            ← Template (copy to .env)
-├── .gitignore              ← Keeps .env out of Git
-├── Procfile                ← For deployment
+│       ├── css/style.css    # Styling
+│       └── js/main.js       # Frontend logic
+├── .env.example             # Environment variable template
+├── .gitignore
+├── Procfile                 # Render/Heroku deploy config
 └── README.md
 ```
 
 ---
 
-## ◆ Quick Start (Local)
+## Local Setup
 
-### 1. Clone / Extract the project
+### Prerequisites
+- Python 3.9 or higher
+- pip
+- A free Groq API key from [console.groq.com](https://console.groq.com)
 
+### Installation
+
+**1. Clone the repository**
 ```bash
+git clone https://github.com/YOUR_USERNAME/ai-cover-letter.git
 cd ai-cover-letter
 ```
 
-### 2. Create a virtual environment
-
+**2. Create a virtual environment**
 ```bash
 python -m venv venv
 
@@ -59,87 +88,100 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-### 3. Install dependencies
-
+**3. Install dependencies**
 ```bash
 pip install -r backend/requirements.txt
 ```
 
-### 4. Set up your API Key (CRUCIAL)
-
+**4. Configure environment variables**
 ```bash
-# Copy the template
 cp .env.example .env
-
-# Open .env and add your real Gemini key
-# Get a free key at: https://aistudio.google.com/app/apikey
+```
+Open `.env` and add your Groq API key:
+```
+GROQ_API_KEY=gsk_your_key_here
 ```
 
-Your `.env` file should look like:
-```
-GEMINI_API_KEY=AIzaSy...your_real_key_here
-```
-
-> ⚠️ **NEVER commit `.env` to GitHub.** It is already listed in `.gitignore`.
-
-### 5. Run the Flask server
-
+**5. Start the server**
 ```bash
 python backend/app.py
 ```
 
-Open your browser at: **http://localhost:5000**
+Visit `http://localhost:5000`
 
 ---
 
-## ◆ Deployment (Render — Free Tier)
+## Environment Variables
 
-1. Push to GitHub (make sure `.env` is NOT committed)
-2. Create a new **Web Service** on [render.com](https://render.com)
-3. Connect your GitHub repo
-4. Set:
-   - **Build Command**: `pip install -r backend/requirements.txt`
-   - **Start Command**: `gunicorn --chdir backend app:app`
-5. Add Environment Variable: `GEMINI_API_KEY` = your key
-6. Deploy!
+| Variable | Description | Required |
+|---|---|---|
+| `GROQ_API_KEY` | Your Groq API key from console.groq.com | Yes |
 
-### Alternative: Railway
-
-1. Push to GitHub
-2. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-3. Add `GEMINI_API_KEY` in Variables tab
-4. Railway auto-detects the Procfile
+> ⚠️ Never commit your `.env` file. It is already excluded in `.gitignore`.
 
 ---
 
-## ◆ API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/` | Serves the frontend |
-| `POST` | `/api/parse-pdf` | Accepts PDF file, returns extracted text |
-| `POST` | `/api/generate` | Accepts form data + resume text, returns cover letter |
+| `POST` | `/api/parse-pdf` | Accepts PDF, returns extracted text |
+| `POST` | `/api/generate` | Accepts form data, returns cover letter |
+
+### POST `/api/generate`
+
+Request body:
+```json
+{
+  "name": "Priya Sharma",
+  "role": "Backend Developer",
+  "company": "Infocera",
+  "skills": "Python, Flask, PostgreSQL",
+  "jobDescription": "...",
+  "resumeText": "..."
+}
+```
+
+Response:
+```json
+{
+  "letter": "Dear Hiring Manager at Infocera,\n\n..."
+}
+```
 
 ---
 
-## ◆ Security Notes
+## Deployment on Render
 
-- API key stored in `.env`, loaded via `python-dotenv`
-- `.env` listed in `.gitignore` — never tracked by Git
-- PDF text is capped at 6,000 characters before sending to AI
+1. Push your code to GitHub (confirm `.env` is not in the repo)
+2. Create a new **Web Service** on [render.com](https://render.com)
+3. Connect your GitHub repository
+4. Configure the service:
+
+| Setting | Value |
+|---|---|
+| Language | Python |
+| Build Command | `pip install -r ai-cover-letter/backend/requirements.txt` |
+| Start Command | `gunicorn --chdir ai-cover-letter/backend app:app --bind 0.0.0.0:$PORT` |
+
+5. Add environment variable: `GROQ_API_KEY` → your key
+6. Deploy
+
+Every subsequent push to `main` triggers an automatic redeploy.
+
+---
+
+## Security Notes
+
+- API key is loaded via `python-dotenv` from a local `.env` file
+- `.env` is listed in `.gitignore` and never tracked by Git
+- PDF content is capped at 6,000 characters before being sent to the AI
 - No user data is stored on the server
 
 ---
 
-## ◆ Tech Stack
+## License
 
-- **Backend**: Python 3.11+, Flask, Flask-CORS
-- **AI**: Google Gemini 1.5 Flash (via `google-generativeai`)
-- **PDF**: PyPDF2
-- **Frontend**: Vanilla HTML/CSS/JS (no framework needed)
-- **Fonts**: Playfair Display + DM Sans
-- **Deployment**: Gunicorn + Render/Railway/Heroku
-
----
-
-*Built for Mission 4 — AI Integration, API Keys, and Prompt Engineering*
+MIT License — free to use, modify, and distribute.
+```
