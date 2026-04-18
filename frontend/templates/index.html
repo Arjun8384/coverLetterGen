@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LetterForge — AI Cover Letter Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="logo">
+      <span class="logo-mark">◆</span>
+      <span>LetterForge</span>
+    </div>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#generator" class="btn-nav">Generate Free</a>
+    </nav>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="grid-lines"></div>
+    </div>
+    <div class="hero-content">
+      <div class="badge">✦ Powered by Google Gemini AI</div>
+      <h1>
+        Your next job<br/>
+        <em>starts with<br/>the right words.</em>
+      </h1>
+      <p class="hero-sub">Upload your resume, paste the job description, and receive a<br/>precision-crafted cover letter in under 10 seconds.</p>
+      <div class="hero-cta">
+        <a href="#generator" class="btn-primary">Start Writing →</a>
+        <span class="hero-note">Free · No signup · Instant</span>
+      </div>
+    </div>
+    <div class="hero-preview">
+      <div class="preview-card">
+        <div class="preview-header">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="preview-title">cover_letter.txt</span>
+        </div>
+        <div class="preview-body">
+          <p class="line">Dear Hiring Manager at <strong>Infocera</strong>,</p>
+          <p class="line fade-1">With five years of full-stack engineering and a track record of delivering scalable cloud architectures, I am excited to bring my expertise to your team...</p>
+          <p class="line fade-2">My experience with React, Python, and AWS aligns directly with the requirements outlined in your posting. At my current role, I reduced deployment time by 40%...</p>
+          <p class="line fade-3">I would welcome the opportunity to discuss how my background can contribute to Infocera's continued growth.</p>
+          <div class="cursor-blink">|</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how" id="how">
+    <div class="container">
+      <p class="section-label">Process</p>
+      <h2>Three steps to your perfect letter</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Fill your details</h3>
+          <p>Enter your name, target role, company, and key skills. The more specific, the better.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Upload your resume</h3>
+          <p>Drop in your PDF resume. Our parser extracts your experience to deeply personalise the letter.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>AI crafts it instantly</h3>
+          <p>Gemini AI generates a structured, 3-4 paragraph letter tailored precisely to the job.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GENERATOR ── -->
+  <section class="generator" id="generator">
+    <div class="container">
+      <p class="section-label">Generator</p>
+      <h2>Build your cover letter</h2>
+
+      <div class="gen-layout">
+        <!-- INPUT PANEL -->
+        <div class="panel input-panel">
+          <div class="panel-header">
+            <span class="panel-icon">✍</span>
+            <span>Your Information</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Full Name <span class="req">*</span></label>
+              <input type="text" id="name" placeholder="e.g. Priya Sharma" />
+            </div>
+            <div class="field">
+              <label for="role">Job Role <span class="req">*</span></label>
+              <input type="text" id="role" placeholder="e.g. Senior React Developer" />
+            </div>
+            <div class="field">
+              <label for="company">Company Name <span class="req">*</span></label>
+              <input type="text" id="company" placeholder="e.g. Infocera" />
+            </div>
+            <div class="field">
+              <label for="skills">Key Skills</label>
+              <input type="text" id="skills" placeholder="e.g. React, Node.js, AWS, Python" />
+            </div>
+          </div>
+
+          <div class="field full">
+            <label for="jobDesc">Job Description <span class="hint">(paste here for best results)</span></label>
+            <textarea id="jobDesc" rows="5" placeholder="Paste the full job description here…"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Resume / CV <span class="hint">(PDF, optional but recommended)</span></label>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="resumeFile" accept=".pdf" hidden />
+              <div class="upload-inner" onclick="document.getElementById('resumeFile').click()">
+                <span class="upload-icon">⬆</span>
+                <span class="upload-text" id="uploadText">Click to upload PDF resume</span>
+                <span class="upload-sub">Max 10MB · PDF only</span>
+              </div>
+            </div>
+            <div class="resume-status" id="resumeStatus"></div>
+          </div>
+
+          <button class="btn-generate" id="generateBtn" onclick="generate()">
+            <span class="btn-label">Generate Cover Letter</span>
+            <span class="btn-loading" style="display:none">
+              <span class="spinner"></span> Crafting your letter…
+            </span>
+          </button>
+
+          <div class="error-box" id="errorBox" style="display:none"></div>
+        </div>
+
+        <!-- OUTPUT PANEL -->
+        <div class="panel output-panel" id="outputPanel">
+          <div class="panel-header">
+            <span class="panel-icon">◆</span>
+            <span>Your Cover Letter</span>
+            <div class="output-actions" id="outputActions" style="display:none">
+              <button class="btn-copy" onclick="copyLetter()">📋 Copy</button>
+              <button class="btn-download" onclick="downloadLetter()">↓ Download</button>
+            </div>
+          </div>
+          <div class="output-placeholder" id="outputPlaceholder">
+            <div class="placeholder-icon">◆</div>
+            <p>Your generated cover letter will appear here</p>
+          </div>
+          <div class="output-text" id="outputText" style="display:none"></div>
+          <div class="copy-toast" id="copyToast">Copied to clipboard ✓</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="logo">
+        <span class="logo-mark">◆</span>
+        <span>LetterForge</span>
+      </div>
+      <p>Built for Mission 4 · AI Cover Letter Generator (Level 3)</p>
+      <p class="footer-small">Python/Flask · Google Gemini · PDF Parsing · Secure .env</p>
+    </div>
+  </footer>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
